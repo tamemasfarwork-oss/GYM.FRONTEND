@@ -1,0 +1,55 @@
+<div dir="rtl">
+  @if (selectedPlayer(); as player) {
+    <!-- بعد الاختيار: اسم اللاعب مع زر تغيير -->
+    <div
+      class="flex items-center justify-between px-3 py-2 rounded-lg border border-blue-200 bg-blue-50"
+    >
+      <span class="text-sm font-bold text-blue-800">{{ player.fullName }}</span>
+      <button
+        type="button"
+        (click)="clear()"
+        class="text-xs text-blue-600 hover:underline cursor-pointer"
+      >
+        تغيير
+      </button>
+    </div>
+  } @else {
+    <!-- relative: عشان القائمة تتموضع تحت الخانة مباشرة -->
+    <div class="relative">
+      <!-- خانة البحث: مع كل حرف نستدعي onType -->
+      <app-custom-input
+        class="block w-full"
+        label="اللاعب"
+        placeholder="اكتب اسم اللاعب..."
+        [value]="searchText()"
+        (valueChange)="onType($event)"
+      >
+      </app-custom-input>
+
+      <!-- القائمة تظهر بس إذا المستخدم كتب شي -->
+      @if (searchText().trim()) {
+        <!-- absolute + z-10: تطلع فوق المحتوى مثل الـ select -->
+        <div
+          class="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-md max-h-64 overflow-y-auto"
+        >
+          @if (isLoading()) {
+            <p class="px-3 py-2 text-sm text-gray-500">جاري البحث...</p>
+          } @else {
+            @for (player of results(); track player.playerID) {
+              <!-- type="button" عشان لو الكمبونت جوا form ما يعمل submit -->
+              <button
+                type="button"
+                (click)="choose(player)"
+                class="block w-full text-right px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer"
+              >
+                {{ player.fullName }}
+              </button>
+            } @empty {
+              <p class="px-3 py-2 text-sm text-gray-500">ما في لاعبين بهالاسم</p>
+            }
+          }
+        </div>
+      }
+    </div>
+  }
+</div>

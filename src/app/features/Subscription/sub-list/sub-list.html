@@ -1,0 +1,111 @@
+<!-- sub-list.component.html -->
+<div class="flex flex-col gap-6 p-6 bg-[#F8F6F0] min-h-screen">
+  <!-- رأس الصفحة: العنوان + أزرار التحكم -->
+  <div class="flex items-center justify-between">
+    <h1 class="text-2xl font-semibold text-[#1E2A2F]">{{ 'subs.title' | translate }}</h1>
+
+    <div class="flex items-center gap-3">
+      <input
+        type="text"
+        [placeholder]="'subs.search' | translate"
+        class="border border-gray-200 rounded-md px-4 py-2 text-sm w-64 bg-white focus:outline-none focus:border-[#1E2A2F] text-gray-700 placeholder-gray-400"
+      />
+
+      <a
+        routerLink="../add"
+        class="bg-[#1E2A2F] text-white px-4 py-2 rounded-md text-sm flex items-center gap-2 hover:bg-opacity-90 transition-colors"
+      >
+        + {{ 'subs.add' | translate }}
+      </a>
+    </div>
+  </div>
+
+  <!-- البطاقة المحيطة بالجدول -->
+  <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-x-auto">
+    <table class="w-full text-sm text-start border-collapse">
+      <thead>
+        <tr class="text-[#8A8A80] border-b border-gray-100 font-medium">
+          <th class="px-6 py-4 font-normal text-start">{{ 'subs.id' | translate }}</th>
+          <th class="px-6 py-4 font-normal text-start">{{ 'subs.fullName' | translate }}</th>
+          <th class="px-6 py-4 font-normal text-start">{{ 'subs.branch' | translate }}</th>
+          <th class="px-6 py-4 font-normal text-start">{{ 'subs.price' | translate }}</th>
+          <th class="px-6 py-4 font-normal text-start">{{ 'subs.startDate' | translate }}</th>
+          <th class="px-6 py-4 font-normal text-start">{{ 'subs.endDate' | translate }}</th>
+          <th class="px-6 py-4 font-normal text-start">{{ 'subs.status' | translate }}</th>
+        </tr>
+      </thead>
+
+      <tbody class="divide-y divide-gray-100 text-[#1E2A2F]">
+        @if (isLoading()) {
+          <tr>
+            <td colspan="7" class="text-center py-10 text-[#8A8A80]">
+              {{ 'subs.loading' | translate }}
+            </td>
+          </tr>
+        } @else {
+          @for (item of subscriptions(); track item.subid) {
+            <tr class="hover:bg-gray-50/50 transition-colors">
+              <td class="px-6 py-4 text-gray-700 font-medium">{{ item.subid }}</td>
+
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-full bg-[#CBD5E1] shrink-0"></div>
+                  <span class="font-medium text-gray-800">{{ item.fullname }}</span>
+                </div>
+              </td>
+
+              <td class="px-6 py-4 text-gray-600">{{ item.branchname }}</td>
+              <td class="px-6 py-4 text-gray-600">${{ item.price }}</td>
+              <td class="px-6 py-4 text-gray-600 whitespace-nowrap">{{ item.startsub }}</td>
+              <td class="px-6 py-4 text-gray-600 whitespace-nowrap">{{ item.endsub }}</td>
+
+              <!-- الحالة -->
+              <td class="px-6 py-4">
+                <span
+                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                  [class]="
+                    item.status === 'Active'
+                      ? 'bg-emerald-50 text-emerald-700'
+                      : 'bg-rose-50 text-rose-700'
+                  "
+                >
+                  {{ 'subs.st.' + item.status | translate }}
+                </span>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="7" class="text-center py-10 text-[#8A8A80]">
+                {{ 'subs.empty' | translate }}
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- أزرار التنقل بين الصفحات -->
+  <div class="flex items-center justify-between text-sm pt-2">
+    <button
+      type="button"
+      (click)="previousPage()"
+      [disabled]="pageNumber() === 1"
+      class="border border-gray-200 bg-white rounded-lg px-4 py-2 text-gray-700 hover:bg-[#1E2A2F] hover:text-white disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:text-gray-700 transition-colors shadow-sm"
+    >
+      {{ 'subs.previous' | translate }}
+    </button>
+
+    <span class="text-[#8A8A80]">
+      {{ 'subs.page' | translate }} <strong class="text-[#1E2A2F]">{{ pageNumber() }}</strong>
+    </span>
+
+    <button
+      type="button"
+      (click)="nextPage()"
+      class="border border-gray-200 bg-white rounded-lg px-4 py-2 text-gray-700 hover:bg-[#1E2A2F] hover:text-white transition-colors shadow-sm"
+    >
+      {{ 'subs.next' | translate }}
+    </button>
+  </div>
+</div>

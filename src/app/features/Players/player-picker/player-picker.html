@@ -1,0 +1,42 @@
+<div class="flex flex-col gap-3" dir="rtl">
+  <app-custom-input
+    class="block w-full"
+    label="ابحث عن لاعب"
+    placeholder="اكتب اسم اللاعب..."
+    [(value)]="searchText"
+  >
+  </app-custom-input>
+
+  @if (isLoading()) {
+    <p class="text-center text-gray-500">جاري التحميل...</p>
+  } @else if (errorMessage()) {
+    <p class="text-center text-red-600">{{ errorMessage() }}</p>
+  } @else {
+    <div class="flex flex-col gap-2 max-h-80 overflow-y-auto">
+      @for (player of filteredPlayers(); track player.playerID) {
+        <button
+          (click)="selectPlayer(player.playerID)"
+          class="text-right p-3 rounded-xl border cursor-pointer transition"
+          [class.bg-blue-600]="selectedId() === player.playerID"
+          [class.text-white]="selectedId() === player.playerID"
+          [class.bg-white]="selectedId() !== player.playerID"
+          [class.hover:bg-gray-50]="selectedId() !== player.playerID"
+        >
+          <p class="font-bold">{{ player.firstName }} {{ player.lastName }}</p>
+          <p class="text-sm opacity-70">{{ player.email }}</p>
+        </button>
+      } @empty {
+        <p class="text-center text-gray-500">ما في لاعبين بهالاسم</p>
+      }
+    </div>
+
+    <!-- زر الاختيار: برا الـ @for، يظهر مرة وحدة تحت القائمة -->
+    <button
+      (click)="goto()"
+      [disabled]="selectedId() === null"
+      class="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold cursor-pointer disabled:bg-gray-300 disabled:cursor-not-allowed"
+    >
+      اختيار
+    </button>
+  }
+</div>

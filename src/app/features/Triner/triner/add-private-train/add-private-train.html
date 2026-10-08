@@ -1,0 +1,264 @@
+<div dir="rtl" class="min-h-screen bg-slate-100 p-4 md:p-8">
+  <div
+    class="mx-auto max-w-4xl overflow-hidden rounded-2xl bg-white shadow-xl ring-1 ring-slate-200"
+  >
+    <!-- الرأس -->
+    <div class="bg-gradient-to-l from-indigo-600 to-blue-500 px-6 py-5 text-white">
+      <div class="flex items-center gap-3">
+        <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-white/20 text-2xl">
+          🏋️
+        </div>
+        <div>
+          <h2 class="text-xl font-bold">اشتراك تدريب خاص</h2>
+          <p class="text-sm text-indigo-100">اختر اللاعب والمدرب وحدّد السعر وحصة النادي</p>
+        </div>
+      </div>
+    </div>
+
+    <form (submit)="$event.preventDefault(); onSubmit()" class="grid gap-6 p-6 md:grid-cols-5">
+      <!-- ===== عمود النموذج ===== -->
+      <div class="space-y-6 md:col-span-3">
+        @if (successMessage()) {
+          <div
+            class="flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700"
+          >
+            <span>✅</span> {{ successMessage() }}
+          </div>
+        }
+        @if (saveError()) {
+          <div
+            class="flex items-center gap-2 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700"
+          >
+            <span>⚠️</span> {{ saveError() }}
+          </div>
+        }
+
+        <!-- الأطراف -->
+        <section class="space-y-4">
+          <h3 class="flex items-center gap-2 text-sm font-semibold text-slate-500">
+            <span class="h-1.5 w-1.5 rounded-full bg-indigo-500"></span> الأطراف
+          </h3>
+
+          <div>
+            <label class="mb-1.5 block text-sm font-medium text-slate-700">
+              اللاعب <span class="text-rose-500">*</span>
+            </label>
+            <div
+              class="rounded-xl border p-1 transition"
+              [class]="
+                errors()['playerId']
+                  ? 'border-rose-400 bg-rose-50/40'
+                  : 'border-slate-200 focus-within:border-indigo-400 focus-within:ring-2 focus-within:ring-indigo-100'
+              "
+            >
+              <app-player-select
+                (playerSelected)="onPlayerSelected($any($event))"
+              ></app-player-select>
+            </div>
+            @if (errors()['playerId']) {
+              <p class="mt-1 text-xs text-rose-600">{{ errors()['playerId'] }}</p>
+            }
+          </div>
+
+          <div>
+            <label class="mb-1.5 block text-sm font-medium text-slate-700">
+              المدرب <span class="text-rose-500">*</span>
+            </label>
+            <div
+              class="rounded-xl border p-1 transition"
+              [class]="
+                errors()['trainerId']
+                  ? 'border-rose-400 bg-rose-50/40'
+                  : 'border-slate-200 focus-within:border-indigo-400 focus-within:ring-2 focus-within:ring-indigo-100'
+              "
+            >
+              <app-trainer-select (selected)="onTrainerSelected($any($event))"></app-trainer-select>
+            </div>
+            @if (errors()['trainerId']) {
+              <p class="mt-1 text-xs text-rose-600">{{ errors()['trainerId'] }}</p>
+            }
+          </div>
+        </section>
+
+        <hr class="border-slate-100" />
+
+        <!-- المبالغ -->
+        <section class="space-y-4">
+          <h3 class="flex items-center gap-2 text-sm font-semibold text-slate-500">
+            <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span> المبالغ
+          </h3>
+
+          <div class="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label for="price" class="mb-1.5 block text-sm font-medium text-slate-700">
+                السعر الشهري <span class="text-rose-500">*</span>
+              </label>
+              <div class="relative">
+                <input
+                  id="price"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  placeholder="0.00"
+                  [value]="form().pricepermonth || ''"
+                  (input)="onFieldChange('pricepermonth', $any($event.target).valueAsNumber)"
+                  class="w-full rounded-xl border bg-white py-2.5 pe-14 ps-3 text-slate-800 outline-none transition placeholder:text-slate-300 focus:ring-2"
+                  [class]="
+                    errors()['pricepermonth']
+                      ? 'border-rose-400 focus:ring-rose-100'
+                      : 'border-slate-200 focus:border-indigo-400 focus:ring-indigo-100'
+                  "
+                />
+                <span
+                  class="pointer-events-none absolute inset-y-0 end-3 flex items-center text-xs font-medium text-slate-400"
+                  >ر.س</span
+                >
+              </div>
+              @if (errors()['pricepermonth']) {
+                <p class="mt-1 text-xs text-rose-600">{{ errors()['pricepermonth'] }}</p>
+              }
+            </div>
+
+            <div>
+              <label for="share" class="mb-1.5 block text-sm font-medium text-slate-700">
+                حصة النادي <span class="text-rose-500">*</span>
+              </label>
+              <div class="relative">
+                <input
+                  id="share"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  placeholder="0.00"
+                  [value]="form().TheClubsShare || ''"
+                  (input)="onFieldChange('TheClubsShare', $any($event.target).valueAsNumber)"
+                  class="w-full rounded-xl border bg-white py-2.5 pe-14 ps-3 text-slate-800 outline-none transition placeholder:text-slate-300 focus:ring-2"
+                  [class]="
+                    errors()['TheClubsShare'] || errors()['shareExceedsPrice']
+                      ? 'border-rose-400 focus:ring-rose-100'
+                      : 'border-slate-200 focus:border-indigo-400 focus:ring-indigo-100'
+                  "
+                />
+                <span
+                  class="pointer-events-none absolute inset-y-0 end-3 flex items-center text-xs font-medium text-slate-400"
+                  >ر.س</span
+                >
+              </div>
+              @if (errors()['TheClubsShare']) {
+                <p class="mt-1 text-xs text-rose-600">{{ errors()['TheClubsShare'] }}</p>
+              }
+              @if (errors()['shareExceedsPrice']) {
+                <p class="mt-1 text-xs text-rose-600">{{ errors()['shareExceedsPrice'] }}</p>
+              }
+            </div>
+          </div>
+        </section>
+
+        <!-- الأزرار -->
+        <div class="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:justify-start">
+          <button
+            type="submit"
+            [disabled]="isSaving()"
+            class="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-6 py-2.5 font-semibold text-white shadow-sm transition hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-200 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            @if (isSaving()) {
+              <svg class="h-5 w-5 animate-spin" viewBox="0 0 24 24" fill="none">
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                  class="opacity-25"
+                ></circle>
+                <path
+                  d="M4 12a8 8 0 018-8"
+                  stroke="currentColor"
+                  stroke-width="4"
+                  stroke-linecap="round"
+                  class="opacity-75"
+                ></path>
+              </svg>
+              جاري الحفظ...
+            } @else {
+              <svg
+                class="h-5 w-5"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              حفظ الاشتراك
+            }
+          </button>
+          <button
+            type="button"
+            (click)="resetForm()"
+            class="rounded-xl border border-slate-200 bg-white px-6 py-2.5 font-medium text-slate-600 transition hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-100"
+          >
+            إعادة تعيين
+          </button>
+        </div>
+      </div>
+
+      <!-- ===== عمود الملخص ===== -->
+      <aside class="md:col-span-2">
+        <div class="sticky top-6 rounded-2xl border border-slate-200 bg-slate-50 p-5">
+          <h3 class="mb-4 text-sm font-semibold text-slate-600">ملخص التوزيع الشهري</h3>
+
+          <div class="mb-5 rounded-xl bg-white p-4 text-center shadow-sm ring-1 ring-slate-100">
+            <p class="text-xs text-slate-400">إجمالي الاشتراك</p>
+            <p class="mt-1 text-3xl font-bold text-slate-800">
+              {{ (form().pricepermonth ?? 0).toFixed(2) }}
+              <span class="text-sm font-medium text-slate-400">ر.س</span>
+            </p>
+          </div>
+
+          <div class="mb-5">
+            <div class="flex h-3 overflow-hidden rounded-full bg-slate-200">
+              <div
+                class="bg-indigo-500 transition-all duration-500"
+                [style.width.%]="clubPercent()"
+              ></div>
+              <div
+                class="bg-emerald-500 transition-all duration-500"
+                [style.width.%]="trainerPercent()"
+              ></div>
+            </div>
+          </div>
+
+          <ul class="space-y-3 text-sm">
+            <li
+              class="flex items-center justify-between rounded-lg bg-white px-3 py-2.5 ring-1 ring-slate-100"
+            >
+              <span class="flex items-center gap-2 text-slate-600">
+                <span class="h-2.5 w-2.5 rounded-full bg-indigo-500"></span> حصة النادي
+                <span class="text-xs text-slate-400">({{ clubPercent() }}%)</span>
+              </span>
+              <span class="font-semibold text-slate-800">{{
+                (form().TheClubsShare ?? 0).toFixed(2)
+              }}</span>
+            </li>
+            <li
+              class="flex items-center justify-between rounded-lg bg-white px-3 py-2.5 ring-1 ring-slate-100"
+            >
+              <span class="flex items-center gap-2 text-slate-600">
+                <span class="h-2.5 w-2.5 rounded-full bg-emerald-500"></span> حصة المدرب
+                <span class="text-xs text-slate-400">({{ trainerPercent() }}%)</span>
+              </span>
+              <span class="font-semibold text-slate-800">{{
+                (trainerShare() ?? 0).toFixed(2)
+              }}</span>
+            </li>
+          </ul>
+
+          <p class="mt-4 text-xs leading-relaxed text-slate-400">
+            حصة المدرب تُحسب تلقائيًا = السعر الشهري − حصة النادي.
+          </p>
+        </div>
+      </aside>
+    </form>
+  </div>
+</div>

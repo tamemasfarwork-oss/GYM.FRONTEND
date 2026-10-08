@@ -1,0 +1,98 @@
+<div class="p-6 max-w-xl flex flex-col gap-5">
+  <h1 class="text-xl font-bold text-[#1E2A2F]">تجديد اشتراك</h1>
+
+  @if (loading()) {
+    <p class="text-gray-500">جارٍ التحميل...</p>
+  } @else if (!oldSub()) {
+    <p class="text-red-600">الاشتراك غير موجود أو ليس منتهياً.</p>
+    <a routerLink="/subscriptions/expired" class="text-[#1E2A2F] underline">رجوع للقائمة</a>
+  } @else {
+    <!-- بيانات القديم -->
+    <div class="bg-gray-50 border border-gray-200 rounded-xl p-4 text-sm flex justify-between">
+      <span class="font-medium">{{ oldSub()!.nameplayer }}</span>
+      <span class="text-gray-500">انتهى في {{ oldSub()!.dateend }}</span>
+    </div>
+    <div class="flex flex-col gap-1">
+      <label class="text-sm text-[#8A8A80]">الفرع</label>
+      <select
+        #branch
+        [value]="branchesId()"
+        (change)="branchesId.set(+branch.value)"
+        class="border border-[#E5E2DA] rounded-md px-4 py-2 text-sm bg-white"
+      >
+        <option value="0">-- اختر الفرع --</option>
+        @for (b of branches(); track b.branchesId) {
+          <option [value]="b.branchesId">{{ b.branchName }}</option>
+        }
+      </select>
+      @if (errors()['branchesId']) {
+        <small class="text-red-600">{{ errors()['branchesId'] }}</small>
+      }
+    </div>
+    <!-- نوع الاشتراك -->
+    <div class="flex flex-col gap-1">
+      <label class="text-sm text-gray-600">نوع الاشتراك</label>
+      <select
+        class="border border-gray-200 rounded-lg px-3 py-2"
+        (change)="typeSubId.set(+$any($event.target).value)"
+      >
+        <option value="0" [selected]="typeSubId() === 0">-- اختر نوع الاشتراك --</option>
+        @for (t of types(); track t.typeSubId) {
+          <option [value]="t.typeSubId" [selected]="t.typeSubId === typeSubId()">
+            المدة :{{ t.timeSpan }}{{ '  ' }} :السعر {{ t.price }}
+          </option>
+        }
+      </select>
+      @if (errors()['typeSubId']) {
+        <small class="text-red-600">{{ errors()['typeSubId'] }}</small>
+      }
+    </div>
+
+    <!-- تاريخ البداية -->
+    <div class="flex flex-col gap-1">
+      <label class="text-sm text-gray-600">تاريخ البداية</label>
+      <input
+        type="date"
+        class="border border-gray-200 rounded-lg px-3 py-2"
+        [value]="startDate()"
+        (input)="startDate.set($any($event.target).value)"
+      />
+      @if (errors()['startDate']) {
+        <small class="text-red-600">{{ errors()['startDate'] }}</small>
+      }
+    </div>
+
+    <!-- طريقة الدفع -->
+    <div class="flex flex-col gap-1">
+      <label class="text-sm text-gray-600">طريقة الدفع</label>
+      <select
+        class="border border-gray-200 rounded-lg px-3 py-2"
+        (change)="paymentMethod.set($any($event.target).value)"
+      >
+        @for (m of paymentMethods; track m) {
+          <option [value]="m" [selected]="m === paymentMethod()">{{ m }}</option>
+        }
+      </select>
+      @if (errors()['paymentMethod']) {
+        <small class="text-red-600">{{ errors()['paymentMethod'] }}</small>
+      }
+    </div>
+
+    @if (serverError()) {
+      <p class="text-red-600 text-sm">{{ serverError() }}</p>
+    }
+
+    <div class="flex gap-3">
+      <button
+        class="bg-[#1E2A2F] text-white px-6 py-2 rounded-lg disabled:opacity-50"
+        [disabled]="saving()"
+        (click)="submit()"
+      >
+        {{ saving() ? '...' : 'تجديد' }}
+      </button>
+      <a routerLink="/subscriptions/expired" class="px-6 py-2 rounded-lg border border-gray-200"
+        >إلغاء</a
+      >
+    </div>
+  }
+</div>

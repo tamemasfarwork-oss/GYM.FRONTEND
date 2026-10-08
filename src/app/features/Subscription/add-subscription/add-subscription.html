@@ -1,0 +1,112 @@
+<div
+  class="max-w-3xl mx-auto p-6 bg-white rounded-xl shadow-md border border-[#E5E2DA] my-8"
+  dir="rtl"
+>
+  <h2 class="text-xl font-bold text-[#1E2A2F] mb-6 pb-2 border-b border-[#E5E2DA]">
+    إضافة اشتراك جديد
+  </h2>
+
+  <form (submit)="$event.preventDefault(); onSubmit()" class="space-y-5">
+    <!-- اللاعب: أول حقل لأن الاشتراك أساسه اللاعب -->
+    <div class="flex flex-col gap-1">
+      <label class="text-sm text-[#8A8A80]">اللاعب</label>
+      <app-player-select (playerSelected)="onPlayerSelected($event ?? 0)"></app-player-select>
+      @if (errors()['playerId']) {
+        <small class="text-red-600">{{ errors()['playerId'] }}</small>
+      }
+    </div>
+
+    <!-- حقل تاريخ التسجيل -->
+    <div class="flex flex-col gap-1.5">
+      <label class="text-sm font-semibold text-[#1E2A2F]">تاريخ الاشتراك</label>
+      <app-custom-input
+        label="تاريخ التسجيل"
+        [required]="true"
+        [value]="today"
+        [disabled]="true"
+        class="pointer-events-none opacity-75"
+      >
+      </app-custom-input>
+    </div>
+
+    <!-- شبكة من صفين للحقول -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="flex flex-col gap-1">
+        <label class="text-sm text-[#8A8A80]">طريقة الدفع</label>
+        <select
+          #payment
+          [value]="form().paymentMethod"
+          (change)="onFieldChange('paymentMethod', payment.value)"
+          class="border border-[#E5E2DA] rounded-md px-4 py-2 text-sm bg-white"
+        >
+          <option value="">-- اختر طريقة الدفع --</option>
+          <option value="Cash">نقدًا</option>
+          <option value="Card">بطاقة</option>
+        </select>
+        @if (errors()['paymentMethod']) {
+          <small class="text-red-600">{{ errors()['paymentMethod'] }}</small>
+        }
+      </div>
+
+      <!-- الفرع -->
+      <div class="flex flex-col gap-1">
+        <label class="text-sm text-[#8A8A80]">الفرع</label>
+        <select
+          #branch
+          [value]="form().branchesId"
+          (change)="onFieldChange('branchesId', +branch.value)"
+          class="border border-[#E5E2DA] rounded-md px-4 py-2 text-sm bg-white"
+        >
+          <option value="0">-- اختر الفرع --</option>
+          @for (b of branches(); track b.branchesId) {
+            <option [value]="b.branchesId">{{ b.branchName }}</option>
+          }
+        </select>
+        @if (errors()['branchesId']) {
+          <small class="text-red-600">{{ errors()['branchesId'] }}</small>
+        }
+      </div>
+    </div>
+
+    <!-- نوع الاشتراك -->
+    <div class="flex flex-col gap-1">
+      <label class="text-sm text-[#8A8A80]">نوع الاشتراك</label>
+      <select
+        #type
+        [value]="form().typeSubId"
+        (change)="onFieldChange('typeSubId', +type.value)"
+        class="border border-[#E5E2DA] rounded-md px-4 py-2 text-sm bg-white"
+      >
+        <option value="0">-- اختر نوع الاشتراك --</option>
+        @for (t of types(); track t.typeSubId) {
+          <option [value]="t.typeSubId">
+            المدة :{{ t.timeSpan }}{{ '  ' }} :السعر {{ t.price }}
+          </option>
+        }
+      </select>
+      @if (errors()['typeSubId']) {
+        <small class="text-red-600">{{ errors()['typeSubId'] }}</small>
+      }
+    </div>
+
+    <!-- زر الحفظ والرسائل -->
+    <div class="pt-4 flex flex-col items-end gap-3">
+      <button
+        type="button"
+        (click)="onSubmit()"
+        [disabled]="isSaving()"
+        class="w-full md:w-auto px-6 py-2.5 bg-[#1E2A2F] text-white text-sm font-medium rounded-lg hover:bg-[#2c3e45] focus:ring-4 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm"
+      >
+        {{ isSaving() ? 'جاري الحفظ...' : 'حفظ البيانات' }}
+      </button>
+
+      @if (successMessage()) {
+        <div
+          class="w-full p-3 bg-green-50 border border-green-200 text-green-700 text-sm rounded-lg text-center"
+        >
+          {{ successMessage() }}
+        </div>
+      }
+    </div>
+  </form>
+</div>

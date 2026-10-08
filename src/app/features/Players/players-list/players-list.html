@@ -1,0 +1,106 @@
+<!-- players-list.html -->
+<div class="flex flex-col gap-6">
+  <!-- رأس الصفحة: العنوان + البحث + زر الإضافة -->
+  <div class="flex items-center justify-between">
+    <h1 class="text-2xl font-medium text-[#1E2A2F]">{{ 'players.title' | translate }}</h1>
+
+    <div class="flex items-center gap-3">
+      <input
+        type="text"
+        [placeholder]="'players.search' | translate"
+        [value]="searchQuery()"
+        (input)="onSearchChange($any($event.target).value)"
+        class="border border-[#E5E2DA] rounded-md px-4 py-2 text-sm w-64 bg-white"
+      />
+
+      <a
+        routerLink="add"
+        class="bg-[#1E2A2F] text-white px-4 py-2 rounded-md text-sm flex items-center gap-2"
+      >
+        + {{ 'players.add' | translate }}
+      </a>
+    </div>
+  </div>
+
+  <!-- الجدول -->
+  <div class="bg-white rounded-lg border border-[#E5E2DA] overflow-x-auto">
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="border-b border-[#E5E2DA] text-start text-[#8A8A80]">
+          <th class="px-4 py-3 font-medium text-start">{{ 'players.id' | translate }}</th>
+          <th class="px-4 py-3 font-medium text-start">{{ 'players.name' | translate }}</th>
+          <th class="px-4 py-3 font-medium text-start">{{ 'players.phone' | translate }}</th>
+          <th class="px-4 py-3 font-medium text-start">{{ 'players.email' | translate }}</th>
+          <th class="px-4 py-3 font-medium text-start">{{ 'players.joinDate' | translate }}</th>
+          <th class="px-4 py-3 font-medium text-start">{{ 'players.type' | translate }}</th>
+          <th class="px-4 py-3 font-medium text-start">{{ 'players.status' | translate }}</th>
+          <th class="px-4 py-3 font-medium text-start">{{ 'players.actions' | translate }}</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @if (isLoading()) {
+          <tr>
+            <td colspan="8" class="text-center py-8 text-[#8A8A80]">
+              {{ 'players.loading' | translate }}
+            </td>
+          </tr>
+        } @else if (players().length === 0) {
+          <tr>
+            <td colspan="8" class="text-center py-8 text-[#8A8A80]">
+              {{ 'players.empty' | translate }}
+            </td>
+          </tr>
+        } @else {
+          @for (player of filteredPlayers(); track player.playerID) {
+            <tr class="border-b border-[#E5E2DA] last:border-0">
+              <td class="px-4 py-3">{{ player.playerID }}</td>
+              <td class="px-4 py-3">
+                <div class="flex items-center gap-2">
+                  <div class="w-8 h-8 shrink-0 rounded-full bg-slate-300"></div>
+                  {{ player.firstName }} {{ player.lastName }}
+                </div>
+              </td>
+              <td class="px-4 py-3">{{ player.phone }}</td>
+              <td class="px-4 py-3">{{ player.email }}</td>
+              <td class="px-4 py-3 whitespace-nowrap">{{ player.dateJoin }}</td>
+              <td class="px-4 py-3">{{ player.type }}</td>
+              <td class="px-4 py-3">
+                <app-status-badge [status]="player.status"></app-status-badge>
+              </td>
+              <td class="px-4 py-3">
+                <div class="flex items-center gap-3">
+                  <a
+                    [routerLink]="['/players/update', player.playerID]"
+                    [title]="'players.update' | translate"
+                    class="text-xs border border-[#E5E2DA] rounded-md px-2 py-1 text-[#1E2A2F] hover:bg-[#1E2A2F] hover:text-white"
+                    >✏️</a
+                  >
+                  <button
+                    type="button"
+                    [title]="'players.view' | translate"
+                    class="text-[#8A8A80] hover:text-[#1E2A2F]"
+                  >
+                    👁️
+                  </button>
+                  <a
+                    [routerLink]="['/subscriptions/add']"
+                    [title]="'players.addSubscription' | translate"
+                    class="whitespace-nowrap text-xs border border-[#E5E2DA] rounded-md px-2 py-1 text-[#1E2A2F] hover:bg-[#1E2A2F] hover:text-white"
+                    >+ {{ 'players.subscription' | translate }}</a
+                  >
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="8" class="text-center py-8 text-[#8A8A80]">
+                {{ 'players.noResults' | translate }}
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

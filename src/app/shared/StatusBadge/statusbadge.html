@@ -1,0 +1,10 @@
+<!-- status-badge.html -->
+<span
+  class="px-3 py-1 rounded-full text-xs font-medium"
+  [class.bg-[#4A5D4E]]="status === 'active'"
+  [class.text-white]="status === 'active'"
+  [class.bg-[#D9D5CB]]="status === 'inactive'"
+  [class.text-[#5A5A52]]="status === 'inactive'"
+>
+  {{ status === 'active' ? 'Active' : 'Inactive' }}
+</span>

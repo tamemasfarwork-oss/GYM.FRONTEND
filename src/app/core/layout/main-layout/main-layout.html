@@ -1,0 +1,12 @@
+<!-- main-layout.html -->
+<div class="flex h-screen">
+  <app-sidebar></app-sidebar>
+
+  <div class="flex-1 flex flex-col overflow-hidden">
+    <app-topbar></app-topbar>
+
+    <main class="flex-1 overflow-y-auto bg-[#F7F5F0] p-8">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

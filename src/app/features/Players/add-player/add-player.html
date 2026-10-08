@@ -1,0 +1,59 @@
+<form (submit)="onSubmit(); $event.preventDefault()" class="flex flex-col gap-4">
+  <app-custom-input
+    label="الاسم الأول"
+    [required]="true"
+    [value]="form().firstName"
+    [errorMessage]="errors().firstName ?? null"
+    (valueChange)="onFieldChange('firstName', $event)"
+  >
+  </app-custom-input>
+
+  <app-custom-input
+    label="اسم العائلة"
+    [required]="true"
+    [value]="form().lastName"
+    [errorMessage]="errors().lastName ?? null"
+    (valueChange)="onFieldChange('lastName', $event)"
+  >
+  </app-custom-input>
+
+  <app-custom-input
+    label="رقم الهاتف"
+    type="tel"
+    [required]="true"
+    [value]="form().phone"
+    [errorMessage]="errors().phone ?? null"
+    (valueChange)="onFieldChange('phone', $event)"
+  >
+  </app-custom-input>
+
+  <app-custom-input
+    label="البريد الإلكتروني (اختياري)"
+    type="email"
+    [value]="form().email"
+    (valueChange)="onFieldChange('email', $event)"
+  >
+  </app-custom-input>
+
+  <app-custom-input
+    label="تاريخ الانضمام"
+    type="date"
+    [required]="true"
+    [value]="form().dateJoin"
+    [errorMessage]="errors().dateJoin ?? null"
+    (valueChange)="onFieldChange('dateJoin', $event)"
+  >
+  </app-custom-input>
+
+  <app-custom-input
+    label="نوع اللاعب"
+    [required]="true"
+    [value]="form().type"
+    [errorMessage]="errors().type ?? null"
+    (valueChange)="onFieldChange('type', $event)"
+  >
+  </app-custom-input>
+
+  <app-button label="حفظ اللاعب" variant="primary" type="submit" [loading]="isSaving()">
+  </app-button>
+</form>

@@ -1,0 +1,107 @@
+<aside class="flex h-screen w-64 flex-col bg-[#1E2A2F] text-white">
+  <!-- هوية النادي -->
+  <div class="flex items-center gap-3 border-b border-white/10 px-5 py-5">
+    <div
+      class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#C9A24B] text-lg font-bold text-[#1E2A2F]"
+    >
+      {{ clubInitial() }}
+    </div>
+    <div class="min-w-0">
+      <h1 class="truncate text-base font-semibold">{{ clubName() }}</h1>
+      <p class="truncate text-xs text-white/50">{{ 'nav.appTagline' | translate }}</p>
+    </div>
+  </div>
+
+  <!-- القائمة -->
+  <nav class="flex flex-1 flex-col gap-1 overflow-y-auto px-3 py-4">
+    @for (item of navItems; track item.path) {
+      @if (item.children) {
+        <button
+          type="button"
+          (click)="toggle(item)"
+          class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-white/80 transition hover:bg-white/5 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A24B]"
+        >
+          <svg
+            class="h-5 w-5 shrink-0"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path [attr.d]="item.icon" />
+          </svg>
+          <span class="flex-1 text-start">{{ item.labelKey | translate }}</span>
+          <svg
+            class="h-4 w-4 transition-transform"
+            [class.rotate-180]="isOpen(item)"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M6 9l6 6l6 -6" />
+          </svg>
+        </button>
+
+        @if (isOpen(item)) {
+          <div class="ms-5 flex flex-col gap-1 border-s border-white/10 ps-3">
+            @for (child of item.children; track child.path) {
+              <a
+                [routerLink]="child.path"
+                routerLinkActive="!bg-[#C9A24B] !text-[#1E2A2F] font-semibold"
+                class="rounded-lg px-3 py-2 text-sm text-white/70 transition hover:bg-white/5 hover:text-white"
+              >
+                {{ child.labelKey | translate }}
+              </a>
+            }
+          </div>
+        }
+      } @else {
+        <a
+          [routerLink]="item.path"
+          routerLinkActive="!bg-[#C9A24B] !text-[#1E2A2F] font-semibold"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-white/80 transition hover:bg-white/5 hover:text-white"
+        >
+          <svg
+            class="h-5 w-5 shrink-0"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path [attr.d]="item.icon" />
+          </svg>
+          <span>{{ item.labelKey | translate }}</span>
+        </a>
+      }
+    }
+  </nav>
+
+  <!-- أسفل السايدبار -->
+  <div class="flex flex-col gap-2 border-t border-white/10 px-3 py-4">
+    <div class="truncate px-2 pb-1 text-xs text-white/50">{{ auth.fullName() }}</div>
+
+    <button
+      type="button"
+      (click)="lang.toggle()"
+      class="rounded-lg border border-white/15 px-4 py-2 text-sm text-white/80 transition hover:bg-white/5"
+    >
+      {{ lang.lang() === 'ar' ? 'English' : 'العربية' }}
+    </button>
+
+    <button
+      type="button"
+      (click)="logout()"
+      class="rounded-lg px-4 py-2 text-sm text-red-300 transition hover:bg-red-500/10"
+    >
+      {{ 'nav.logout' | translate }}
+    </button>
+  </div>
+</aside>

@@ -1,0 +1,69 @@
+<div class="mx-auto max-w-md p-6">
+  <form
+    (submit)="$event.preventDefault(); submit()"
+    class="space-y-4 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm"
+  >
+    <div>
+      <h2 class="text-lg font-semibold text-gray-900">{{ 'types.addTitle' | translate }}</h2>
+      <p class="mt-0.5 text-sm text-gray-500">{{ 'types.addHint' | translate }}</p>
+    </div>
+
+    <div>
+      <app-custom-input
+        [label]="'types.fieldName' | translate"
+        [placeholder]="'types.fieldNameHint' | translate"
+        [(value)]="timeSpan"
+      />
+      @if (submitted() && nameInvalid()) {
+        <p class="mt-1 text-xs text-red-600">{{ 'types.errRequired' | translate }}</p>
+      }
+    </div>
+
+    <div>
+      <app-custom-input
+        type="number"
+        placeholder="3"
+        [label]="'types.fieldDuration' | translate"
+        [(value)]="durationMonths"
+      />
+      @if (submitted() && durationInvalid()) {
+        <p class="mt-1 text-xs text-red-600">{{ 'types.errDuration' | translate }}</p>
+      }
+    </div>
+
+    <div>
+      <app-custom-input
+        type="number"
+        placeholder="0"
+        [label]="'types.fieldPrice' | translate"
+        [(value)]="price"
+      />
+      @if (submitted() && priceInvalid()) {
+        <p class="mt-1 text-xs text-red-600">{{ 'types.errPrice' | translate }}</p>
+      }
+    </div>
+
+    @if (serverError()) {
+      <div class="rounded-lg bg-red-50 p-3 text-sm text-red-700">
+        {{ 'types.saveError' | translate }}
+      </div>
+    }
+
+    <div class="flex justify-end gap-2 pt-2">
+      <button
+        type="button"
+        (click)="back()"
+        class="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
+      >
+        {{ 'common.cancel' | translate }}
+      </button>
+      <button
+        type="submit"
+        [disabled]="saving()"
+        class="rounded-lg bg-[#c9a24b] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#b8923f] disabled:opacity-60"
+      >
+        {{ 'common.save' | translate }}
+      </button>
+    </div>
+  </form>
+</div>

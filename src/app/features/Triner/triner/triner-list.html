@@ -1,0 +1,140 @@
+<!-- triner-list.html -->
+<div class="flex flex-col gap-6 p-6 bg-[#F8F6F0] min-h-screen">
+  <!-- رأس الصفحة -->
+  <div class="flex items-center justify-between">
+    <h1 class="text-2xl font-semibold text-[#1E2A2F]">{{ 'trainers.title' | translate }}</h1>
+
+    <div class="flex items-center gap-3">
+      <input
+        type="text"
+        [placeholder]="'trainers.search' | translate"
+        class="border border-gray-200 rounded-md px-4 py-2 text-sm w-64 bg-white focus:outline-none focus:border-[#1E2A2F] text-gray-700 placeholder-gray-400"
+      />
+
+      <a
+        routerLink="add"
+        class="bg-[#1E2A2F] text-white px-4 py-2 rounded-md text-sm flex items-center gap-2 hover:bg-opacity-90 transition-colors"
+      >
+        + {{ 'trainers.add' | translate }}
+      </a>
+      <a
+        routerLink="private_train"
+        class="bg-[#1E2A2F] text-white px-4 py-2 rounded-md text-sm flex items-center gap-2 hover:bg-opacity-90 transition-colors"
+      >
+        + {{ 'trainers.addPrivate' | translate }}
+      </a>
+    </div>
+  </div>
+
+  <!-- الجدول -->
+  <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-x-auto">
+    <table class="w-full text-sm text-start border-collapse">
+      <thead>
+        <tr class="text-[#8A8A80] border-b border-gray-100 font-medium">
+          <th class="px-6 py-4 font-normal text-start">{{ 'trainers.id' | translate }}</th>
+          <th class="px-6 py-4 font-normal text-start">{{ 'trainers.fullName' | translate }}</th>
+          <th class="px-6 py-4 font-normal text-start">
+            {{ 'trainers.specialization' | translate }}
+          </th>
+          <th class="px-6 py-4 font-normal text-start">{{ 'trainers.salary' | translate }}</th>
+          <th class="px-6 py-4 font-normal text-start">
+            {{ 'trainers.privatePrice' | translate }}
+          </th>
+          <th class="px-6 py-4 font-normal text-start">{{ 'trainers.workDate' | translate }}</th>
+          <th class="px-6 py-4 font-normal text-start">{{ 'trainers.createdBy' | translate }}</th>
+          <th class="px-6 py-4 font-normal text-start">{{ 'trainers.status' | translate }}</th>
+          <th class="px-6 py-4 font-normal text-start">{{ 'trainers.actions' | translate }}</th>
+        </tr>
+      </thead>
+
+      <tbody class="divide-y divide-gray-100 text-[#1E2A2F]">
+        @if (isLoading()) {
+          <tr>
+            <td colspan="9" class="text-center py-10 text-[#8A8A80]">
+              {{ 'trainers.loading' | translate }}
+            </td>
+          </tr>
+        } @else {
+          @for (item of trainers(); track item.trainersId) {
+            <tr class="hover:bg-gray-50/50 transition-colors">
+              <td class="px-6 py-4 text-gray-700 font-medium">#{{ item.trainersId }}</td>
+
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-3">
+                  <div
+                    class="w-8 h-8 rounded-full bg-[#CBD5E1] shrink-0 flex items-center justify-center text-xs font-bold text-gray-700"
+                  >
+                    🏋️‍♂️
+                  </div>
+                  <span class="font-medium text-gray-800">{{
+                    item.fullname || ('trainers.noName' | translate)
+                  }}</span>
+                </div>
+              </td>
+
+              <td class="px-6 py-4 text-gray-600">{{ item.specialization }}</td>
+              <td class="px-6 py-4 text-gray-600">${{ item.salaryPerMonth }}</td>
+              <td class="px-6 py-4 text-gray-600">${{ item.pricePerMonthPrivateTrain }}</td>
+              <td class="px-6 py-4 text-gray-600">{{ item.dateWork }}</td>
+              <td class="px-6 py-4 text-gray-600">{{ item.createBy }}</td>
+
+              <td class="px-6 py-4 font-semibold">
+                @if (item.isActive === 1) {
+                  <span
+                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700"
+                  >
+                    {{ 'trainers.active' | translate }}
+                  </span>
+                } @else {
+                  <span
+                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-rose-50 text-rose-700"
+                  >
+                    {{ 'trainers.inactive' | translate }}
+                  </span>
+                }
+              </td>
+
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-2">
+                  <button class="text-gray-400 hover:text-[#1E2A2F] transition-colors">
+                    {{ 'trainers.edit' | translate }}
+                  </button>
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="9" class="text-center py-10 text-[#8A8A80]">
+                {{ 'trainers.empty' | translate }}
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- الترقيم -->
+  <div class="flex items-center justify-between text-sm pt-2">
+    <button
+      type="button"
+      (click)="previousPage()"
+      [disabled]="pageNumber() === 1"
+      class="border border-gray-200 bg-white rounded-lg px-4 py-2 text-gray-700 hover:bg-[#1E2A2F] hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-sm"
+    >
+      {{ 'trainers.previous' | translate }}
+    </button>
+
+    <span class="text-[#8A8A80]">
+      {{ 'trainers.page' | translate }} <strong class="text-[#1E2A2F]">{{ pageNumber() }}</strong>
+    </span>
+
+    <button
+      type="button"
+      (click)="nextPage()"
+      class="border border-gray-200 bg-white rounded-lg px-4 py-2 text-gray-700 hover:bg-[#1E2A2F] hover:text-white transition-colors shadow-sm"
+    >
+      {{ 'trainers.next' | translate }}
+    </button>
+  </div>
+</div>

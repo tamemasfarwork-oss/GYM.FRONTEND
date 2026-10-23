@@ -7,7 +7,7 @@ import { CreateTypeSubDto, TypeSubDto } from '../../../../model/create-dto-sub';
 })
 export class SubscriptionTypesService {
   private http = inject(HttpClient);
-  private baseUrl = 'https://localhost:7057/TypeSub';
+  private baseUrl = 'https://tamemwork0-001-site1.jtempurl.com/TypeSub';
 
   getlisttype(): Observable<TypeSubDto[]> {
     return this.http.get<TypeSubDto[]>(`${this.baseUrl}/GetTypeOfSub`);

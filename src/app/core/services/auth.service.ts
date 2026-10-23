@@ -15,17 +15,20 @@ export class AuthService {
   private readonly NAME = 'gm_name';
 
   fullName = signal<string>(localStorage.getItem(this.NAME) ?? '');
-  clubName = signal<string>(this.readClubName()); // جديد
+  clubName = signal<string>(this.readClubName());
 
   login(email: string, password: string) {
     return this.http
-      .post<LoginResponse>('https://localhost:7057/Auth/Login', { email, password })
+      .post<LoginResponse>('https://tamemwork0-001-site1.jtempurl.com/Auth/Login', {
+        email,
+        password,
+      })
       .pipe(
         tap((r) => {
           localStorage.setItem(this.KEY, r.token);
           localStorage.setItem(this.NAME, r.fullName);
           this.fullName.set(r.fullName);
-          this.clubName.set(this.readClubName()); // جديد (بعد حفظ التوكن)
+          this.clubName.set(this.readClubName());
         }),
       );
   }
@@ -43,10 +46,9 @@ export class AuthService {
     localStorage.removeItem(this.KEY);
     localStorage.removeItem(this.NAME);
     this.fullName.set('');
-    this.clubName.set(''); // جديد
+    this.clubName.set('');
   }
 
-  // جديد: يفك التوكن مرة وحدة (ويدعم الأسماء العربية)
   private readPayload(): any | null {
     const t = localStorage.getItem('gm_token');
     if (!t) return null;
@@ -59,7 +61,6 @@ export class AuthService {
     }
   }
 
-  // جديد
   private readClubName(): string {
     return this.readPayload()?.club_name ?? '';
   }

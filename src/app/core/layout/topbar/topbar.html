@@ -1,25 +1,4 @@
 <!-- topbar.html -->
-<header class="h-20 bg-[#F7F5F0] flex items-center justify-end px-8 border-b border-[#E5E2DA]">
-  <div class="flex items-center gap-4">
-    <button class="relative w-9 h-9 flex items-center justify-center rounded-full hover:bg-black/5">
-      🔔
-      <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-    </button>
-
-    <div class="flex items-center gap-2">
-      <div class="w-9 h-9 rounded-full bg-slate-300"></div>
-      <div class="text-sm">
-        <div class="text-xs text-slate-500">Admin</div>
-        <div class="font-medium">{{ adminName }}</div>
-
-        <button
-          type="button"
-          (click)="lang.toggle()"
-          class="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50"
-        >
-          {{ lang.lang() === 'ar' ? 'English' : 'العربية' }}
-        </button>
-      </div>
-    </div>
-  </div>
-</header>
+<header
+  class="h-20 bg-[#F7F5F0] flex items-center justify-end px-8 border-b border-[#E5E2DA]"
+></header>

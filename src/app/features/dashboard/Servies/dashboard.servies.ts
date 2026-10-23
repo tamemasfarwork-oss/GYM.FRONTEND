@@ -6,28 +6,26 @@ import { MonthRevenueDto, SubEXDto, SubscriptionDto } from '../../model/create-d
 @Injectable({ providedIn: 'root' })
 export class dashboardservies {
   private http = inject(HttpClient);
-  private baseUrl = 'https://localhost:7057';
+  private baseUrl = 'https://tamemwork0-001-site1.jtempurl.com';
 
   getActiveSubs(): Observable<any[]> {
-    return this.http.get<any[]>(`https://localhost:7057/Subscription/GetActiveSub`);
+    return this.http.get<any[]>(`${this.baseUrl}/Subscription/GetActiveSub`);
   }
   GetALLPlayers(): Observable<any[]> {
-    return this.http.get<any[]>(`https://localhost:7057/Players/countplayers`);
+    return this.http.get<any[]>(`${this.baseUrl}/Players/countplayers`);
   }
 
   getExpiringIn7Days(): Observable<SubscriptionDto[]> {
-    return this.http.get<SubscriptionDto[]>(`https://localhost:7057/Subscription/SubUntilEx7days`);
+    return this.http.get<SubscriptionDto[]>(`${this.baseUrl}/Subscription/SubUntilEx7days`);
   }
   GetMonthlyRevenue(): Observable<any> {
-    return this.http.get('https://localhost:7057/Subscription/Revenues');
+    return this.http.get(`${this.baseUrl}/Subscription/Revenues`);
   }
   getRevenueLast6Months(): Observable<MonthRevenueDto[]> {
-    return this.http.get<MonthRevenueDto[]>(
-      `https://localhost:7057/Subscription/RevenueLast6Months`,
-    );
+    return this.http.get<MonthRevenueDto[]>(`${this.baseUrl}/Subscription/RevenueLast6Months`);
   }
 
   GetExpiredSubs(): Observable<SubEXDto[]> {
-    return this.http.get<SubEXDto[]>(`https://localhost:7057/Subscription/SubEX`);
+    return this.http.get<SubEXDto[]>(`${this.baseUrl}/Subscription/SubEX`);
   }
 }

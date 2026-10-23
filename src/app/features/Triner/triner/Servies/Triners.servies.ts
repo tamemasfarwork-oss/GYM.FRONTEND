@@ -6,8 +6,8 @@ import { PrivateTrainSub, TrainerDto, TrainerLookup } from '../../../model/Trine
   providedIn: 'root',
 })
 export class TrainerService {
-  // قم بتغيير الرابط وفقاً لرابط الـ API الخاص بمشروعك
-  private readonly apiUrl = 'https://localhost:7057/Triner/GetAllTriner';
+  private baseUrl = 'https://tamemwork0-001-site1.jtempurl.com';
+  private readonly apiUrl = `${this.baseUrl}/Triner/GetAllTriner`;
 
   constructor(private http: HttpClient) {}
 
@@ -15,7 +15,7 @@ export class TrainerService {
   getAllTrainers(pageNumber: number = 1, pageSize: number = 10): Observable<TrainerDto[]> {
     const params = new HttpParams().set('pagenmuber', pageNumber).set('pagesize', pageSize);
 
-    return this.http.get<TrainerDto[]>('https://localhost:7057/Triner/GetAllTriner', { params });
+    return this.http.get<TrainerDto[]>(`${this.baseUrl}/Triner/GetAllTriner`, { params });
   }
 
   // جلب مدرب محدد بواسطة الـ ID
@@ -38,11 +38,11 @@ export class TrainerService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
   search(searchTerm: string): Observable<TrainerLookup[]> {
-    return this.http.get<TrainerLookup[]>('https://localhost:7057/Triner/Lookup', {
+    return this.http.get<TrainerLookup[]>(`${this.baseUrl}/Triner/Lookup`, {
       params: { searchTerm },
     });
   }
   addPrivateTrainSub(dto: PrivateTrainSub) {
-    return this.http.post(`https://localhost:7057/create`, dto);
+    return this.http.post(`${this.baseUrl}/create`, dto);
   }
 }

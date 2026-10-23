@@ -7,6 +7,6 @@ export class BranchService {
   private http = inject(HttpClient);
 
   add(body: BranchAddDto) {
-    return this.http.post('https://localhost:7057/addbranch', body);
+    return this.http.post('https://tamemwork0-001-site1.jtempurl.com/Branches/addbranch', body);
   }
 }
